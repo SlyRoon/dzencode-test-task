@@ -4,8 +4,6 @@ const api = axios.create({
   baseURL: 'http://localhost:3000/api'
 });
  
-
-
 export const getOrders = async (): Promise<IOrder[]> => {
     const {data} = await api.get<IOrder[]>('/orders');
     return data
