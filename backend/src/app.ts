@@ -1,1 +1,11 @@
-// TODO: create express app, configure cors + json middleware, mount apiRouter at /api
+import express from 'express';
+import cors from 'cors';
+import apiRouter from './routes/index';
+
+export const app = express();
+
+app.use(cors());
+app.use(express.json());
+
+
+app.use('/api', apiRouter);
