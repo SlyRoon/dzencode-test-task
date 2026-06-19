@@ -1,3 +1,8 @@
-const OrdersPage = () => { return <div></div> }
-
-export default OrdersPage
+function OrderPage () {
+    return (
+        <div>
+            OrderPage
+        </div>
+    )
+}
+export default OrderPage
