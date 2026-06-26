@@ -14,20 +14,21 @@ const initialState: OrdersState = {
     error: null,
 }
 
-const fetchOrders = createAsyncThunk (
+export const fetchOrders = createAsyncThunk(
     'orders/fetchAll',
     async () => {
-        const response = await getOrders()
-        return response
+        const response = await getOrders();
+        return response;
     }
-)
-const fetchDeleteOrder = createAsyncThunk (
+);
+
+export const fetchDeleteOrder = createAsyncThunk(
     'orders/delete',
     async (id: number) => {
-        await deleteOrder(id)
-        return id
+        await deleteOrder(id);
+        return id;
     }
-) 
+);
 
 const ordersSlice = createSlice ({
     name: 'orders',

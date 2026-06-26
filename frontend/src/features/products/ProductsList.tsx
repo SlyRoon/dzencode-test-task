@@ -1,50 +1,91 @@
-import './ProductList.css'
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import './ProductList.css';
+import type { IProduct, IOrder } from '../../types';
+import { FiMonitor } from 'react-icons/fi';
+import { RiDeleteBin6Line } from 'react-icons/ri';
+import { formatShortDate, formatLongDate, formatNumericDate } from '../../utils/formatDate';
 
-function ProductsList() {
+interface ProductsListProps {
+  products: IProduct[];
+  orders: IOrder[];
+}
+
+const ProductsList: React.FC<ProductsListProps> = ({ products, orders }) => {
+  const { t } = useTranslation();
+
   return (
-    <div className="product d-flex align-items-center gap-5">
+    <div className="products-list-wrapper">
+      {products.map((product) => {
+        const isFree = product.isNew === 1;
+        const order = orders.find((o) => o.id === product.order);
 
-      <span className="product__status product__status--free">●</span>
+        const priceUSD = product.price.find((p) => p.symbol === 'USD')?.value ?? 0;
+        const priceUAH = product.price.find((p) => p.symbol === 'UAH')?.value ?? 0;
 
-      <img className="product__icon" src="monitor-icon.png" alt="monitor" />
+        return (
+          <div key={product.id} className="product-row-card">
+            <div className={`product-status-dot ${isFree ? 'dot-free' : 'dot-repair'}`}></div>
 
-      <div className="product__info">
-        <p className="product__name">Gigabyte Technology X58-USB3 (Socket 1366) 6 X58-USB3</p>
-        <span className="product__serial">SN-12.3456789</span>
-      </div>
+            <div className="product-icon-box">
+              <FiMonitor size={24} color="#94a3b8" />
+            </div>
 
-      <span className="product__condition product__condition--free">свободен</span>
+            <div className="product-col product-col-name">
+              <div className="product-name-text" title={product.title}>{product.title}</div>
+              <div className="product-serial-text">SN-{product.serialNumber}</div>
+            </div>
 
-      <div className="product__warranty">
-        <span className="product__warranty-from">с 06 / 04 / 2017</span>
-        <span className="product__warranty-to">по 06 / 08 / 2025</span>
-      </div>
+            <div className={`product-col product-col-status ${isFree ? 'text-free' : 'text-repair'}`}>
+              {isFree ? t('status.free') : t('status.repair')}
+            </div>
 
-      <span className="product__state">новый</span>
+            <div className="product-col product-col-guarantee">
+              <div className="guarantee-text">
+                <span className="text-muted">{t('guarantee.from')}</span> {formatNumericDate(product.guarantee.start)}
+              </div>
+              <div className="guarantee-text">
+                <span className="text-muted">{t('guarantee.to')}</span> {formatNumericDate(product.guarantee.end)}
+              </div>
+            </div>
 
-      <div className="product__price">
-        <span className="product__price-usd">2 500 $</span>
-        <span className="product__price-uah">250 000. 50 уан</span>
-      </div>
+            <div className="product-col product-col-state">
+              {isFree ? t('status.new') : t('status.used')}
+            </div>
 
+            <div className="product-col product-col-price">
+              <div className="price-usd-text">{priceUSD} <span className="price-currency">$</span></div>
+              <div className="price-uah-text">{priceUAH} <span className="price-currency">UAH</span></div>
+            </div>
 
-      <p className="product__group">Длинное предлинное длиннючее название группы</p>
+            <div
+              className="product-col product-col-group"
+              title={product.specification || t('orders.groupNameFallback')}
+            >
+              {product.specification || t('orders.groupNameFallback')}
+            </div>
 
-      <span className="product__divider">—</span>
+            <div className="product-col product-col-user">—</div>
 
-      <p className="product__user">Христорождественский Александр</p>
+            <div className="product-col product-col-order" title={order?.title}>
+              {order?.title || t('orders.unknown')}
+            </div>
 
-      <p className="product__order">Длинное предлинное длиннючее название прихода</p>
+            <div className="product-col product-col-date">
+              <div className="date-short-text">{formatShortDate(product.date)}</div>
+              <div className="date-long-text">{formatLongDate(product.date)}</div>
+            </div>
 
-      <div className="product__date">
-        <span className="product__date-short">06 / 12</span>
-        <span className="product__date-full">06 / Сен / 2017</span>
-      </div>
-
-      <button className="product__delete">🗑</button>
-
+            <div className="product-col-action">
+              <button className="product-delete-btn" aria-label="delete">
+                <RiDeleteBin6Line size={20} />
+              </button>
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
-}
+};
 
 export default ProductsList;
