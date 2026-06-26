@@ -1,7 +1,19 @@
 import { NavLink } from "react-router-dom";
-import './Sidebar.css'
+import { useTranslation } from "react-i18next";
+import "./Sidebar.css";
 import userAvatar from "../../assets/smile_face.jpeg";
+
+const NAV_ITEMS = [
+  { to: "/income", key: "nav.income" },
+  { to: "/groups", key: "nav.groups" },
+  { to: "/products", key: "nav.products" },
+  { to: "/users", key: "nav.users" },
+  { to: "/settings", key: "nav.settings" },
+];
+
 function Sidebar() {
+  const { t } = useTranslation();
+
   return (
     <div className="left-sidebar">
       <div className="left-sidebar__avatar-wrap">
@@ -9,23 +21,13 @@ function Sidebar() {
         <button className="left-sidebar__gear">⚙</button>
       </div>
 
-      <div className="left-sidebar__navigate d-flex gap-3 flex-column">
-        <NavLink className="left-sidebar__link" to="/orders">
-          ПРИХОД
-        </NavLink>
-        <NavLink className="left-sidebar__link" to="/groups">
-          ГРУППЫ
-        </NavLink>
-        <NavLink className="left-sidebar__link" to="/products">
-          ПРОДУКТЫ
-        </NavLink>
-        <NavLink className="left-sidebar__link" to="/users">
-          ПОЛЬЗОВАТЕЛИ
-        </NavLink>
-        <NavLink className="left-sidebar__link" to="/settings">
-          НАСТРОЙКИ
-        </NavLink>
-      </div>
+      <nav className="left-sidebar__navigate d-flex gap-3 flex-column">
+        {NAV_ITEMS.map(({ to, key }) => (
+          <NavLink key={to} className="left-sidebar__link" to={to}>
+            {t(key)}
+          </NavLink>
+        ))}
+      </nav>
     </div>
   );
 }
