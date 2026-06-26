@@ -5,6 +5,8 @@ import type { IProduct, IOrder } from '../../types';
 import { FiMonitor } from 'react-icons/fi';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { formatShortDate, formatLongDate, formatNumericDate } from '../../utils/formatDate';
+import { useAppDispatch } from '../../hooks/redux';
+import { fetchDeleteProduct } from './productsSlice';
 
 interface ProductsListProps {
   products: IProduct[];
@@ -13,6 +15,7 @@ interface ProductsListProps {
 
 const ProductsList: React.FC<ProductsListProps> = ({ products, orders }) => {
   const { t } = useTranslation();
+  const dispatch = useAppDispatch();
 
   return (
     <div className="products-list-wrapper">
@@ -77,7 +80,11 @@ const ProductsList: React.FC<ProductsListProps> = ({ products, orders }) => {
             </div>
 
             <div className="product-col-action">
-              <button className="product-delete-btn" aria-label="delete">
+              <button
+                className="product-delete-btn"
+                aria-label="delete"
+                onClick={() => dispatch(fetchDeleteProduct(product.id))}
+              >
                 <RiDeleteBin6Line size={20} />
               </button>
             </div>

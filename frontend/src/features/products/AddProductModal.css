@@ -1,0 +1,146 @@
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.apm-modal {
+  position: relative;
+  background: #ffffff;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 640px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 30px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+  animation: apm-pop 0.22s ease-out;
+}
+
+@keyframes apm-pop {
+  from { transform: translateY(12px) scale(0.98); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+.apm-close {
+  position: absolute;
+  top: -14px;
+  right: -14px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #fff;
+  border: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.apm-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 22px;
+}
+
+.apm-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.apm-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.apm-field--full {
+  grid-column: 1 / -1;
+}
+
+.apm-field label {
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: #64748b;
+}
+
+.apm-input {
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 9px 12px;
+  font-size: 0.92rem;
+  color: #334155;
+  background: #fff;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.apm-input:focus {
+  outline: none;
+  border-color: #8bc34a;
+  box-shadow: 0 0 0 3px rgba(139, 195, 74, 0.18);
+}
+
+.apm-input--error {
+  border-color: #ef4444;
+}
+
+.apm-input--error:focus {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+}
+
+.apm-error {
+  font-size: 0.75rem;
+  color: #ef4444;
+}
+
+.apm-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.apm-btn {
+  border: none;
+  border-radius: 6px;
+  padding: 10px 22px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.apm-btn--cancel {
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+.apm-btn--submit {
+  background: #8bc34a;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(139, 195, 74, 0.4);
+}
+
+.apm-btn--submit:hover {
+  transform: translateY(-1px);
+}
+
+.apm-btn--submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (max-width: 560px) {
+  .apm-form {
+    grid-template-columns: 1fr;
+  }
+}

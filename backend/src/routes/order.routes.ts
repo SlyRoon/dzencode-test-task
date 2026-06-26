@@ -4,6 +4,7 @@ import { orderController } from '../controllers/order.controller';
 const router = Router();
 
 router.get('/', orderController.getAll);
-router.delete('/:id' , orderController.deleteById)
+router.post('/', orderController.create);
+router.delete('/:id', orderController.deleteById);
 
 export default router;
