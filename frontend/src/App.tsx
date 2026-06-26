@@ -1,25 +1,53 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import type { ReactNode } from 'react';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
 import Layout from './layouts/Layout';
-import OrderPage from './pages/OrdersPage';
+import OrdersPage from './pages/OrdersPage';
 import ProductsPage from './pages/ProductsPage';
+import StubPage from './pages/StubPage';
+import NotFoundPage from './pages/NotFoundPage';
+
+// Анимация перехода между роутами (требование ТЗ — transitions)
+const PageTransition = ({ children }: { children: ReactNode }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 12 }}
+    animate={{ opacity: 1, y: 0 }}
+    exit={{ opacity: 0, y: -12 }}
+    transition={{ duration: 0.28, ease: 'easeOut' }}
+  >
+    {children}
+  </motion.div>
+);
+
+function AnimatedRoutes() {
+  const location = useLocation();
+
+  return (
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        <Route path='/' element={<Layout />}>
+          <Route index element={<Navigate to='/income' replace />} />
+          {/* ПРИХОД -> список продуктов (Продукты / N) */}
+          <Route path='income' element={<PageTransition><ProductsPage /></PageTransition>} />
+          {/* ГРУППЫ -> приходы (split-вид: список приходов + продукты выбранного) */}
+          <Route path='groups' element={<PageTransition><OrdersPage /></PageTransition>} />
+          {/* ПРОДУКТЫ -> список продуктов */}
+          <Route path='products' element={<PageTransition><ProductsPage /></PageTransition>} />
+          <Route path='users' element={<PageTransition><StubPage titleKey='nav.users' /></PageTransition>} />
+          <Route path='settings' element={<PageTransition><StubPage titleKey='nav.settings' /></PageTransition>} />
+        </Route>
+        <Route path='*' element={<NotFoundPage />} />
+      </Routes>
+    </AnimatePresence>
+  );
+}
+
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path='/' element={<Layout />}>
-          <Route index element={<Navigate to='/orders' replace />}/>
-          <Route path='orders' element={<OrderPage/>}/>
-          <Route path='products' element={<ProductsPage/>}/>
-        </Route>
-        <Route
-        path='*'
-        element={<div>404 Not Found</div>}
-        />
-
-        
-      </Routes>
+      <AnimatedRoutes />
     </BrowserRouter>
-  )
+  );
 }
 
-export default App
+export default App;
