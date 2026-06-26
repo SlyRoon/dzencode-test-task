@@ -41,6 +41,26 @@
     "delete": "DELETE",
     "empty": "This order has no products."
   },
+  "form": {
+    "addProductTitle": "New product",
+    "addOrderTitle": "New order",
+    "title": "Product title",
+    "orderTitle": "Order title",
+    "type": "Product type",
+    "serialNumber": "Serial number",
+    "specification": "Specification (group)",
+    "condition": "Condition",
+    "guaranteeStart": "Guarantee: from",
+    "guaranteeEnd": "Guarantee: to",
+    "priceUSD": "Price, USD",
+    "priceUAH": "Price, UAH",
+    "photo": "Photo (URL)",
+    "submit": "Add",
+    "cancel": "Cancel",
+    "errRequired": "Required field",
+    "errPositive": "Must be greater than 0",
+    "errDateOrder": "End date is before start date"
+  },
   "stub": {
     "title": "Section under construction",
     "text": "This section is not available yet."

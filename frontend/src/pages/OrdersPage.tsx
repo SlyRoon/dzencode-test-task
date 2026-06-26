@@ -9,6 +9,7 @@ import { fetchProducts } from "../features/products/productsSlice";
 import OrdersList from "../features/orders/OrdersList";
 import OrderDetails from "../features/orders/OrderDetails";
 import DeleteOrderModal from "../features/orders/DeleteOrderModal";
+import AddOrderModal from "../features/orders/AddOrderModal";
 import "./OrdersPage.css";
 
 function OrderPage() {
@@ -17,6 +18,7 @@ function OrderPage() {
 
   const [selectedOrderId, setSelectedOrderId] = useState<number | null>(null);
   const [orderToDelete, setOrderToDelete] = useState<number | null>(null);
+  const [addOrderOpen, setAddOrderOpen] = useState(false);
 
   const { orders, status: oStatus } = useSelector((state: RootState) => state.orders);
   const { products, status: pStatus } = useSelector((state: RootState) => state.products);
@@ -49,7 +51,11 @@ function OrderPage() {
   return (
     <div className="orders-page container-fluid px-4 py-4">
       <div className="orders-page-header d-flex align-items-center gap-4 mb-4">
-        <button className="orders-add-btn" aria-label={t("orders.addProduct")}>
+        <button
+          className="orders-add-btn"
+          aria-label={t("form.addOrderTitle")}
+          onClick={() => setAddOrderOpen(true)}
+        >
           <FiPlus size={22} color="#fff" />
         </button>
         <h2 className="orders-page-title m-0">
@@ -87,6 +93,8 @@ function OrderPage() {
           }}
         />
       )}
+
+      {addOrderOpen && <AddOrderModal onClose={() => setAddOrderOpen(false)} />}
     </div>
   );
 }

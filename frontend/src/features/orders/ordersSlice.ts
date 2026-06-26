@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { IOrder } from '../../types';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { getOrders, deleteOrder } from '../../services/api';
+import { getOrders, deleteOrder, createOrder } from '../../services/api';
 interface OrdersState {
   orders: IOrder[];
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
@@ -27,6 +27,14 @@ export const fetchDeleteOrder = createAsyncThunk(
     async (id: number) => {
         await deleteOrder(id);
         return id;
+    }
+);
+
+export const fetchAddOrder = createAsyncThunk(
+    'orders/add',
+    async (payload: { title: string; description?: string }) => {
+        const response = await createOrder({ title: payload.title, description: payload.description ?? '' });
+        return response;
     }
 );
 
@@ -60,6 +68,10 @@ const ordersSlice = createSlice ({
         .addCase(fetchDeleteOrder.rejected, (state, action) => {
             state.status = 'failed'
             state.error = action.error.message || 'Unknown error'
+        })
+        builder
+        .addCase(fetchAddOrder.fulfilled, (state, action) => {
+            state.orders.push(action.payload)
         })
     }
     

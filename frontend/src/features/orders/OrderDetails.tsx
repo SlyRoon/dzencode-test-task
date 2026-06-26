@@ -5,6 +5,9 @@ import type { IOrder, IProduct } from '../../types';
 import { MdClose } from 'react-icons/md';
 import { FiPlus, FiMonitor } from 'react-icons/fi';
 import { RiDeleteBin6Line } from 'react-icons/ri';
+import { useAppDispatch } from '../../hooks/redux';
+import { fetchDeleteProduct } from '../products/productsSlice';
+import AddProductModal from '../products/AddProductModal';
 
 interface OrderDetailsProps {
   order: IOrder;
@@ -14,7 +17,9 @@ interface OrderDetailsProps {
 
 const OrderDetails: React.FC<OrderDetailsProps> = ({ order, products, onClose }) => {
   const { t } = useTranslation();
+  const dispatch = useAppDispatch();
   const [mounted, setMounted] = useState(false);
+  const [addOpen, setAddOpen] = useState(false);
 
   useEffect(() => {
     const frame = requestAnimationFrame(() => setMounted(true));
@@ -31,7 +36,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ order, products, onClose })
         <h3 className="order-details-title">{order.title}</h3>
         
         <div className="order-details-add-product">
-          <button className="add-product-btn">
+          <button className="add-product-btn" onClick={() => setAddOpen(true)}>
             <span className="add-product-icon-wrapper">
               <FiPlus size={18} color="#fff" />
             </span>
@@ -59,7 +64,11 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ order, products, onClose })
                   {isFree ? t('status.free') : t('status.repair')}
                 </div>
                 
-                <button className="delete-product-btn">
+                <button
+                  className="delete-product-btn"
+                  onClick={() => dispatch(fetchDeleteProduct(product.id))}
+                  aria-label="delete product"
+                >
                   <RiDeleteBin6Line size={20} />
                 </button>
               </div>
@@ -67,6 +76,10 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ order, products, onClose })
           })}
         </div>
       </div>
+
+      {addOpen && (
+        <AddProductModal orderId={order.id} onClose={() => setAddOpen(false)} />
+      )}
     </div>
   );
 };

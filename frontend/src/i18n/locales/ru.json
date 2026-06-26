@@ -41,6 +41,26 @@
     "delete": "УДАЛИТЬ",
     "empty": "В этом приходе нет продуктов."
   },
+  "form": {
+    "addProductTitle": "Новый продукт",
+    "addOrderTitle": "Новый приход",
+    "title": "Название продукта",
+    "orderTitle": "Название прихода",
+    "type": "Тип продукта",
+    "serialNumber": "Серийный номер",
+    "specification": "Спецификация (группа)",
+    "condition": "Состояние",
+    "guaranteeStart": "Гарантия: с",
+    "guaranteeEnd": "Гарантия: по",
+    "priceUSD": "Цена, USD",
+    "priceUAH": "Цена, UAH",
+    "photo": "Фото (URL)",
+    "submit": "Добавить",
+    "cancel": "Отмена",
+    "errRequired": "Обязательное поле",
+    "errPositive": "Должно быть больше 0",
+    "errDateOrder": "Дата окончания раньше даты начала"
+  },
   "stub": {
     "title": "Раздел в разработке",
     "text": "Этот раздел пока недоступен."
