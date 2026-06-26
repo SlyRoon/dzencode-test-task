@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { AnimatePresence } from 'framer-motion';
 import './OrderDetails.css';
 import type { IOrder, IProduct } from '../../types';
 import { MdClose } from 'react-icons/md';
@@ -77,9 +78,11 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ order, products, onClose })
         </div>
       </div>
 
-      {addOpen && (
-        <AddProductModal orderId={order.id} onClose={() => setAddOpen(false)} />
-      )}
+      <AnimatePresence>
+        {addOpen && (
+          <AddProductModal orderId={order.id} onClose={() => setAddOpen(false)} />
+        )}
+      </AnimatePresence>
     </div>
   );
 };

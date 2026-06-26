@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { motion } from 'framer-motion';
 import { MdClose } from 'react-icons/md';
+import { FiPackage } from 'react-icons/fi';
 import { useAppDispatch } from '../../hooks/redux';
 import { fetchAddProduct } from './productsSlice';
 import type { NewProductPayload } from '../../services/api';
@@ -35,6 +37,20 @@ const initialForm: FormState = {
   priceUSD: '',
   priceUAH: '',
   photo: '',
+};
+
+const overlayMotion = {
+  initial: { opacity: 0 },
+  animate: { opacity: 1 },
+  exit: { opacity: 0 },
+  transition: { duration: 0.2 },
+};
+
+const dialogMotion = {
+  initial: { opacity: 0, y: 24, scale: 0.96 },
+  animate: { opacity: 1, y: 0, scale: 1 },
+  exit: { opacity: 0, y: 24, scale: 0.96 },
+  transition: { type: 'spring' as const, damping: 24, stiffness: 280 },
 };
 
 const AddProductModal: React.FC<AddProductModalProps> = ({ orderId, onClose }) => {
@@ -105,127 +121,142 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ orderId, onClose }) =
     }
   };
 
+  const fieldClass = (key: string) =>
+    errors[key] ? 'apm-input apm-input--error' : 'apm-input';
+
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="apm-modal" onClick={(e) => e.stopPropagation()}>
-        <button className="apm-close" onClick={onClose} aria-label="close">
-          <MdClose size={22} color="#334155" />
-        </button>
+    <motion.div className="modal-overlay" onClick={onClose} {...overlayMotion}>
+      <motion.div
+        className="apm-modal"
+        onClick={(e) => e.stopPropagation()}
+        {...dialogMotion}
+      >
+        <div className="apm-header">
+          <div className="apm-header-title">
+            <span className="apm-header-icon">
+              <FiPackage size={20} color="#fff" />
+            </span>
+            <h3 className="apm-title">{t('form.addProductTitle')}</h3>
+          </div>
+          <button className="apm-close" onClick={onClose} aria-label="close" type="button">
+            <MdClose size={22} />
+          </button>
+        </div>
 
-        <h3 className="apm-title">{t('form.addProductTitle')}</h3>
+        <form onSubmit={handleSubmit} noValidate>
+          <div className="apm-body">
+            <div className="apm-field apm-field--full">
+              <label>{t('form.title')}</label>
+              <input
+                type="text"
+                value={form.title}
+                onChange={(e) => setField('title', e.target.value)}
+                className={fieldClass('title')}
+              />
+              {errors.title && <span className="apm-error">{errors.title}</span>}
+            </div>
 
-        <form className="apm-form" onSubmit={handleSubmit} noValidate>
-          <div className="apm-field apm-field--full">
-            <label>{t('form.title')}</label>
-            <input
-              type="text"
-              value={form.title}
-              onChange={(e) => setField('title', e.target.value)}
-              className={errors.title ? 'apm-input apm-input--error' : 'apm-input'}
-            />
-            {errors.title && <span className="apm-error">{errors.title}</span>}
+            <div className="apm-field">
+              <label>{t('form.type')}</label>
+              <input
+                type="text"
+                value={form.type}
+                onChange={(e) => setField('type', e.target.value)}
+                className={fieldClass('type')}
+              />
+              {errors.type && <span className="apm-error">{errors.type}</span>}
+            </div>
+
+            <div className="apm-field">
+              <label>{t('form.serialNumber')}</label>
+              <input
+                type="number"
+                value={form.serialNumber}
+                onChange={(e) => setField('serialNumber', e.target.value)}
+                className={fieldClass('serialNumber')}
+              />
+              {errors.serialNumber && <span className="apm-error">{errors.serialNumber}</span>}
+            </div>
+
+            <div className="apm-field apm-field--full">
+              <label>{t('form.specification')}</label>
+              <input
+                type="text"
+                value={form.specification}
+                onChange={(e) => setField('specification', e.target.value)}
+                className="apm-input"
+              />
+            </div>
+
+            <div className="apm-field">
+              <label>{t('form.condition')}</label>
+              <select
+                value={form.isNew}
+                onChange={(e) => setField('isNew', e.target.value)}
+                className="apm-input"
+              >
+                <option value="1">{t('status.new')}</option>
+                <option value="0">{t('status.used')}</option>
+              </select>
+            </div>
+
+            <div className="apm-field">
+              <label>{t('form.photo')}</label>
+              <input
+                type="text"
+                value={form.photo}
+                onChange={(e) => setField('photo', e.target.value)}
+                className="apm-input"
+                placeholder="https://..."
+              />
+            </div>
+
+            <div className="apm-field">
+              <label>{t('form.guaranteeStart')}</label>
+              <input
+                type="date"
+                value={form.guaranteeStart}
+                onChange={(e) => setField('guaranteeStart', e.target.value)}
+                className={fieldClass('guaranteeStart')}
+              />
+              {errors.guaranteeStart && <span className="apm-error">{errors.guaranteeStart}</span>}
+            </div>
+
+            <div className="apm-field">
+              <label>{t('form.guaranteeEnd')}</label>
+              <input
+                type="date"
+                value={form.guaranteeEnd}
+                onChange={(e) => setField('guaranteeEnd', e.target.value)}
+                className={fieldClass('guaranteeEnd')}
+              />
+              {errors.guaranteeEnd && <span className="apm-error">{errors.guaranteeEnd}</span>}
+            </div>
+
+            <div className="apm-field">
+              <label>{t('form.priceUSD')}</label>
+              <input
+                type="number"
+                value={form.priceUSD}
+                onChange={(e) => setField('priceUSD', e.target.value)}
+                className={fieldClass('priceUSD')}
+              />
+              {errors.priceUSD && <span className="apm-error">{errors.priceUSD}</span>}
+            </div>
+
+            <div className="apm-field">
+              <label>{t('form.priceUAH')}</label>
+              <input
+                type="number"
+                value={form.priceUAH}
+                onChange={(e) => setField('priceUAH', e.target.value)}
+                className={fieldClass('priceUAH')}
+              />
+              {errors.priceUAH && <span className="apm-error">{errors.priceUAH}</span>}
+            </div>
           </div>
 
-          <div className="apm-field">
-            <label>{t('form.type')}</label>
-            <input
-              type="text"
-              value={form.type}
-              onChange={(e) => setField('type', e.target.value)}
-              className={errors.type ? 'apm-input apm-input--error' : 'apm-input'}
-            />
-            {errors.type && <span className="apm-error">{errors.type}</span>}
-          </div>
-
-          <div className="apm-field">
-            <label>{t('form.serialNumber')}</label>
-            <input
-              type="number"
-              value={form.serialNumber}
-              onChange={(e) => setField('serialNumber', e.target.value)}
-              className={errors.serialNumber ? 'apm-input apm-input--error' : 'apm-input'}
-            />
-            {errors.serialNumber && <span className="apm-error">{errors.serialNumber}</span>}
-          </div>
-
-          <div className="apm-field apm-field--full">
-            <label>{t('form.specification')}</label>
-            <input
-              type="text"
-              value={form.specification}
-              onChange={(e) => setField('specification', e.target.value)}
-              className="apm-input"
-            />
-          </div>
-
-          <div className="apm-field">
-            <label>{t('form.condition')}</label>
-            <select
-              value={form.isNew}
-              onChange={(e) => setField('isNew', e.target.value)}
-              className="apm-input"
-            >
-              <option value="1">{t('status.new')}</option>
-              <option value="0">{t('status.used')}</option>
-            </select>
-          </div>
-
-          <div className="apm-field">
-            <label>{t('form.photo')}</label>
-            <input
-              type="text"
-              value={form.photo}
-              onChange={(e) => setField('photo', e.target.value)}
-              className="apm-input"
-              placeholder="https://..."
-            />
-          </div>
-
-          <div className="apm-field">
-            <label>{t('form.guaranteeStart')}</label>
-            <input
-              type="date"
-              value={form.guaranteeStart}
-              onChange={(e) => setField('guaranteeStart', e.target.value)}
-              className={errors.guaranteeStart ? 'apm-input apm-input--error' : 'apm-input'}
-            />
-            {errors.guaranteeStart && <span className="apm-error">{errors.guaranteeStart}</span>}
-          </div>
-
-          <div className="apm-field">
-            <label>{t('form.guaranteeEnd')}</label>
-            <input
-              type="date"
-              value={form.guaranteeEnd}
-              onChange={(e) => setField('guaranteeEnd', e.target.value)}
-              className={errors.guaranteeEnd ? 'apm-input apm-input--error' : 'apm-input'}
-            />
-            {errors.guaranteeEnd && <span className="apm-error">{errors.guaranteeEnd}</span>}
-          </div>
-
-          <div className="apm-field">
-            <label>{t('form.priceUSD')}</label>
-            <input
-              type="number"
-              value={form.priceUSD}
-              onChange={(e) => setField('priceUSD', e.target.value)}
-              className={errors.priceUSD ? 'apm-input apm-input--error' : 'apm-input'}
-            />
-            {errors.priceUSD && <span className="apm-error">{errors.priceUSD}</span>}
-          </div>
-
-          <div className="apm-field">
-            <label>{t('form.priceUAH')}</label>
-            <input
-              type="number"
-              value={form.priceUAH}
-              onChange={(e) => setField('priceUAH', e.target.value)}
-              className={errors.priceUAH ? 'apm-input apm-input--error' : 'apm-input'}
-            />
-            {errors.priceUAH && <span className="apm-error">{errors.priceUAH}</span>}
-          </div>
-
-          <div className="apm-actions apm-field--full">
+          <div className="apm-footer">
             <button type="button" className="apm-btn apm-btn--cancel" onClick={onClose}>
               {t('form.cancel')}
             </button>
@@ -234,8 +265,8 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ orderId, onClose }) =
             </button>
           </div>
         </form>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };
 

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { AnimatePresence } from "framer-motion";
 import { FiPlus } from "react-icons/fi";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState, AppDispatch } from "../app/store";
@@ -80,21 +81,23 @@ function OrderPage() {
         )}
       </div>
 
-      {orderToDelete !== null && ordersWithStats.find((o) => o.id === orderToDelete) && (
-        <DeleteOrderModal
-          products={products.filter((p) => p.order === orderToDelete)}
-          onClose={() => setOrderToDelete(null)}
-          onConfirm={() => {
-            dispatch(fetchDeleteOrder(orderToDelete));
-            setOrderToDelete(null);
-            if (selectedOrderId === orderToDelete) {
-              setSelectedOrderId(null);
-            }
-          }}
-        />
-      )}
+      <AnimatePresence>
+        {orderToDelete !== null && ordersWithStats.find((o) => o.id === orderToDelete) && (
+          <DeleteOrderModal
+            products={products.filter((p) => p.order === orderToDelete)}
+            onClose={() => setOrderToDelete(null)}
+            onConfirm={() => {
+              dispatch(fetchDeleteOrder(orderToDelete));
+              setOrderToDelete(null);
+              if (selectedOrderId === orderToDelete) {
+                setSelectedOrderId(null);
+              }
+            }}
+          />
+        )}
 
-      {addOrderOpen && <AddOrderModal onClose={() => setAddOrderOpen(false)} />}
+        {addOrderOpen && <AddOrderModal onClose={() => setAddOrderOpen(false)} />}
+      </AnimatePresence>
     </div>
   );
 }

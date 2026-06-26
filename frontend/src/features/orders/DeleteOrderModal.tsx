@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { motion } from 'framer-motion';
 import './DeleteOrderModal.css';
 import type {IProduct } from '../../types';
 import { MdClose } from 'react-icons/md';
@@ -15,8 +16,22 @@ interface DeleteOrderModalProps {
 const DeleteOrderModal: React.FC<DeleteOrderModalProps> = ({ products, onClose, onConfirm }) => {
   const { t } = useTranslation();
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+    <motion.div
+      className="modal-overlay"
+      onClick={onClose}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.2 }}
+    >
+      <motion.div
+        className="modal-content"
+        onClick={(e) => e.stopPropagation()}
+        initial={{ opacity: 0, y: 24, scale: 0.96 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: 24, scale: 0.96 }}
+        transition={{ type: 'spring', damping: 24, stiffness: 280 }}
+      >
         <button className="modal-close-btn" onClick={onClose}>
           <MdClose size={24} color="#334155" />
         </button>
@@ -55,8 +70,8 @@ const DeleteOrderModal: React.FC<DeleteOrderModalProps> = ({ products, onClose, 
             {t('deleteModal.delete')}
           </button>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };
 
