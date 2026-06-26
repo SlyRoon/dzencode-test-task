@@ -1,0 +1,175 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-content {
+  background-color: #ffffff;
+  border-radius: 6px;
+  width: 90%;
+  max-width: 600px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  animation: slideUp 0.3s ease;
+  overflow: visible; /* To allow the close button to stick out */
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: -15px;
+  right: -15px;
+  background-color: #ffffff;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  z-index: 10;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.modal-close-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+  padding: 30px 40px 20px;
+}
+
+.modal-title {
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: #334155;
+  margin: 0;
+}
+
+.modal-body {
+  padding: 0 40px 30px;
+  max-height: 350px;
+  overflow-y: auto;
+}
+
+.modal-products-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  border-top: 1px solid #e2e8f0;
+  padding-top: 20px;
+}
+
+.modal-product-item {
+  display: flex;
+  align-items: center;
+}
+
+.modal-status-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #8bc34a;
+  margin-right: 15px;
+  box-shadow: 0 0 0 3px rgba(139, 195, 74, 0.2);
+}
+
+.modal-product-icon {
+  margin-right: 15px;
+}
+
+.modal-product-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.modal-product-title {
+  color: #334155;
+  font-weight: 500;
+  font-size: 0.95rem;
+  text-decoration: underline;
+  text-decoration-color: #cbd5e1;
+  text-underline-offset: 2px;
+}
+
+.modal-product-serial {
+  color: #94a3b8;
+  font-size: 0.85rem;
+}
+
+.modal-empty-text {
+  color: #94a3b8;
+  text-align: center;
+  font-size: 0.95rem;
+}
+
+.modal-footer {
+  background-color: #8bc34a; /* Полностью зеленый низ */
+  padding: 20px 40px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 15px;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+
+.modal-cancel-btn {
+  background-color: transparent;
+  color: #ffffff;
+  border: none;
+  font-weight: 500;
+  font-size: 0.95rem;
+  cursor: pointer;
+  padding: 10px 20px;
+  transition: opacity 0.2s;
+}
+
+.modal-cancel-btn:hover {
+  opacity: 0.8;
+}
+
+.modal-delete-btn {
+  background-color: #ffffff;
+  color: #ef4444; /* Красный текст */
+  border: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  padding: 10px 25px;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.modal-delete-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}

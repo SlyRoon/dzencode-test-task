@@ -1,0 +1,29 @@
+.orders-page-title {
+  font-size: 28px;
+  font-weight: 600;
+  color: #475569;
+}
+
+.orders-add-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-color: #8bc34a;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 6px 14px rgba(139, 195, 74, 0.4);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  flex-shrink: 0;
+}
+
+.orders-add-btn:hover {
+  transform: scale(1.06);
+  box-shadow: 0 8px 18px rgba(139, 195, 74, 0.5);
+}
+
+.orders-page-body {
+  align-items: flex-start;
+}
