@@ -1,5 +1,9 @@
 import { IOrder, IProduct } from './types';
 
+/**
+ * Входные данные соответствуют примеру из app.js (тестовое задание dZENcode).
+ * Orders (приходы) <- 1:N -> Products (продукты), связь через product.order.
+ */
 export let orders: IOrder[] = [
   { id: 1, title: 'Order 1', date: '2017-06-29 12:09:33', description: 'desc' },
   { id: 2, title: 'Order 2', date: '2017-06-29 12:09:33', description: 'desc' },
@@ -15,7 +19,10 @@ export const products: IProduct[] = [
     title: 'Product 1',
     type: 'Monitors',
     specification: 'Specification 1',
-    guarantee: { start: '2017-06-29 12:09:33', end: '2017-06-29 12:09:33' },
+    guarantee: {
+      start: '2017-06-29 12:09:33',
+      end: '2017-06-29 12:09:33',
+    },
     price: [
       { value: 100, symbol: 'USD', isDefault: 0 },
       { value: 2600, symbol: 'UAH', isDefault: 1 },
@@ -31,7 +38,10 @@ export const products: IProduct[] = [
     title: 'Product 2',
     type: 'Monitors',
     specification: 'Specification 1',
-    guarantee: { start: '2017-06-29 12:09:33', end: '2017-06-29 12:09:33' },
+    guarantee: {
+      start: '2017-06-29 12:09:33',
+      end: '2017-06-29 12:09:33',
+    },
     price: [
       { value: 100, symbol: 'USD', isDefault: 0 },
       { value: 2600, symbol: 'UAH', isDefault: 1 },
