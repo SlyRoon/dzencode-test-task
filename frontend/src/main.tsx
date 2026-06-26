@@ -4,6 +4,7 @@ import { Provider } from "react-redux";
 import {store} from "./app/store.ts";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./index.css";
+import "./i18n";
 import App from "./App.tsx";
 
 createRoot(document.getElementById("root")!).render(
