@@ -18,7 +18,10 @@ function TopMenu() {
   }, []);
 
   useEffect(() => {
-    const socket = io("http://localhost:3000");
+
+    const socket = io({
+      path: "/api/socket.io",
+    });
 
     socket.on("activeSessions", (count: number) => setActiveSessions(count));
 
@@ -45,7 +48,11 @@ function TopMenu() {
       <div className="container-fluid px-4">
         <div className="d-flex justify-content-between align-items-center">
           <div className="top-menu__brand d-flex align-items-center">
-            <img src={topLogo} alt="Inventory Logo" className="top-menu__logo" />
+            <img
+              src={topLogo}
+              alt="Inventory Logo"
+              className="top-menu__logo"
+            />
             <h1 className="top-menu__title">{t("top.brand")}</h1>
           </div>
 
