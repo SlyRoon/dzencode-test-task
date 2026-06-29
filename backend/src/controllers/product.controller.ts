@@ -1,22 +1,23 @@
 import { Request, Response } from 'express';
-import { products } from '../mockData';
-import { IPrice, IProduct } from '../types';
+import { prisma } from '../prisma';
+import { mapProduct } from '../mappers';
+import { IPrice } from '../types';
 
-const nextId = (): number =>
-  products.length ? Math.max(...products.map((p) => p.id)) + 1 : 1;
-
-const nowString = (): string =>
-  new Date().toISOString().slice(0, 19).replace('T', ' ');
+const now = (): Date => new Date();
 
 export const productController = {
-  getAll: (_req: Request, res: Response): void => {
-    res.json(products);
+  getAll: async (_req: Request, res: Response): Promise<void> => {
+    const products = await prisma.product.findMany({
+      include: { prices: true },
+      orderBy: { id: 'asc' },
+    });
+
+    res.json(products.map(mapProduct));
   },
 
-  create: (req: Request, res: Response): void => {
+  create: async (req: Request, res: Response): Promise<void> => {
     const body = req.body ?? {};
 
-    // Серверная валидация обязательных полей
     const errors: string[] = [];
     if (!body.title || String(body.title).trim() === '') errors.push('title');
     if (!body.type || String(body.type).trim() === '') errors.push('type');
@@ -29,40 +30,56 @@ export const productController = {
       return;
     }
 
+    const order = await prisma.order.findUnique({
+      where: { id: Number(body.order) },
+      select: { id: true },
+    });
+
+    if (!order) {
+      res.status(400).json({ message: 'Validation failed', fields: ['order'] });
+      return;
+    }
+
     const price: IPrice[] = (body.price as IPrice[]).map((p) => ({
       value: Number(p.value) || 0,
       symbol: String(p.symbol),
       isDefault: Number(p.isDefault) ? 1 : 0,
     }));
 
-    const product: IProduct = {
-      id: nextId(),
-      serialNumber: Number(body.serialNumber),
-      isNew: Number(body.isNew) ? 1 : 0,
-      photo: body.photo ? String(body.photo) : 'pathToFile.jpg',
-      title: String(body.title).trim(),
-      type: String(body.type).trim(),
-      specification: body.specification ? String(body.specification).trim() : '',
-      guarantee: {
-        start: body.guarantee?.start || nowString(),
-        end: body.guarantee?.end || nowString(),
+    const fallbackDate = now();
+    const product = await prisma.product.create({
+      data: {
+        serialNumber: String(body.serialNumber),
+        isNew: Number(body.isNew) ? 1 : 0,
+        photo: body.photo ? String(body.photo) : 'pathToFile.jpg',
+        title: String(body.title).trim(),
+        type: String(body.type).trim(),
+        specification: body.specification ? String(body.specification).trim() : '',
+        guaranteeStart: body.guarantee?.start ? new Date(body.guarantee.start) : fallbackDate,
+        guaranteeEnd: body.guarantee?.end ? new Date(body.guarantee.end) : fallbackDate,
+        orderId: Number(body.order),
+        date: fallbackDate,
+        prices: {
+          create: price.map((item) => ({
+            value: item.value,
+            symbol: item.symbol,
+            isDefault: item.isDefault,
+          })),
+        },
       },
-      price,
-      order: Number(body.order),
-      date: nowString(),
-    };
+      include: { prices: true },
+    });
 
-    products.push(product);
-    res.status(201).json(product);
+    res.status(201).json(mapProduct(product));
   },
 
-  deleteById: (req: Request, res: Response): void => {
+  deleteById: async (req: Request, res: Response): Promise<void> => {
     const id = Number(req.params.id);
-    const index = products.findIndex((p) => p.id === id);
-    if (index !== -1) {
-      products.splice(index, 1);
+
+    try {
+      await prisma.product.delete({ where: { id } });
       res.status(200).json({ message: 'Product deleted', id });
-    } else {
+    } catch {
       res.status(404).json({ message: 'Product not found' });
     }
   },

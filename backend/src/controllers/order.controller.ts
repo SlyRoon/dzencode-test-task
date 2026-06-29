@@ -1,19 +1,23 @@
 import { Request, Response } from 'express';
-import { orders } from '../mockData';
-import { IOrder } from '../types';
-
-const nextId = (): number =>
-  orders.length ? Math.max(...orders.map((o) => o.id)) + 1 : 1;
-
-const nowString = (): string =>
-  new Date().toISOString().slice(0, 19).replace('T', ' ');
+import { mapOrder } from '../mappers';
+import { prisma } from '../prisma';
 
 export const orderController = {
-  getAll: (_req: Request, res: Response): void => {
-    res.json(orders);
+  getAll: async (_req: Request, res: Response): Promise<void> => {
+    const orders = await prisma.order.findMany({
+      include: {
+        products: {
+          include: { prices: true },
+          orderBy: { id: 'asc' },
+        },
+      },
+      orderBy: { id: 'asc' },
+    });
+
+    res.json(orders.map(mapOrder));
   },
 
-  create: (req: Request, res: Response): void => {
+  create: async (req: Request, res: Response): Promise<void> => {
     const body = req.body ?? {};
 
     if (!body.title || String(body.title).trim() === '') {
@@ -21,24 +25,24 @@ export const orderController = {
       return;
     }
 
-    const order: IOrder = {
-      id: nextId(),
-      title: String(body.title).trim(),
-      date: body.date || nowString(),
-      description: body.description ? String(body.description) : '',
-    };
+    const order = await prisma.order.create({
+      data: {
+        title: String(body.title).trim(),
+        date: body.date ? new Date(body.date) : new Date(),
+        description: body.description ? String(body.description) : '',
+      },
+    });
 
-    orders.push(order);
-    res.status(201).json(order);
+    res.status(201).json(mapOrder(order));
   },
 
-  deleteById: (req: Request, res: Response): void => {
+  deleteById: async (req: Request, res: Response): Promise<void> => {
     const id = Number(req.params.id);
-    const index = orders.findIndex((i) => i.id === id);
-    if (index !== -1) {
-      orders.splice(index, 1);
+
+    try {
+      await prisma.order.delete({ where: { id } });
       res.status(200).json({ message: 'Order deleted' });
-    } else {
+    } catch {
       res.status(404).json({ message: 'Order not found' });
     }
   },
