@@ -19,6 +19,11 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci --omit=dev
 
+# Generate Prisma Client for the runtime image
+COPY prisma ./prisma
+COPY prisma.config.ts ./
+RUN npx prisma generate
+
 # Copy compiled output from the builder stage
 COPY --from=builder /app/dist ./dist
 

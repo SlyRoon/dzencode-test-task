@@ -61,8 +61,10 @@ CREATE TABLE prices (
 -- =====================================================================
 
 INSERT INTO orders (title, date, description) VALUES
-  ('Order 1', '2017-06-29 12:09:33', 'Long term storage delivery'),
-  ('Order 2', '2017-06-29 12:09:33', 'Office equipment batch');
+  ('Order 1', '2017-06-29 12:09:33', 'desc'),
+  ('Order 2', '2017-06-29 12:09:33', 'desc'),
+  ('Order 3', '2017-06-29 12:09:33', 'desc'),
+  ('Order 4', '2017-06-29 12:09:33', 'desc');
 
 INSERT INTO products
   (serial_number, is_new, photo, title, type, specification,
@@ -70,8 +72,8 @@ INSERT INTO products
 VALUES
   ('1234', 1, 'pathToFile.jpg', 'Product 1', 'Monitors', 'Specification 1',
    '2017-06-29 12:09:33', '2017-06-29 12:09:33', 1, '2017-06-29 12:09:33'),
-  ('5678', 0, 'pathToFile.jpg', 'Product 2', 'Laptops', 'Specification 2',
-   '2017-06-29 12:09:33', '2018-06-29 12:09:33', 2, '2017-06-29 12:09:33');
+  ('1234', 1, 'pathToFile.jpg', 'Product 2', 'Monitors', 'Specification 1',
+   '2017-06-29 12:09:33', '2017-06-29 12:09:33', 2, '2017-06-29 12:09:33');
 
 INSERT INTO prices (product_id, value, symbol, is_default) VALUES
   (1, 100.00, 'USD', 0),

@@ -1,12 +1,27 @@
-version: "3.8"
-
 services:
+  db:
+    image: mariadb:11.4
+    environment:
+      MARIADB_ROOT_PASSWORD: root_password
+      MARIADB_DATABASE: inventory
+      MARIADB_USER: db_user
+      MARIADB_PASSWORD: password123
+    volumes:
+      - db-data:/var/lib/mysql
+      - ./db/schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
+    restart: unless-stopped
+    networks:
+      - app-network
+
   backend:
     build: ./backend
     ports:
       - "3000:3000"
     environment:
       PORT: 3000
+      DATABASE_URL: mysql://db_user:password123@db:3306/inventory
+    depends_on:
+      - db
     restart: unless-stopped
     networks:
       - app-network
@@ -24,3 +39,6 @@ services:
 networks:
   app-network:
     driver: bridge
+
+volumes:
+  db-data:
