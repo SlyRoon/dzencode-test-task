@@ -8,6 +8,7 @@ RUN npm ci
 
 # Copy sources and compile TypeScript -> dist
 COPY . .
+RUN npx prisma generate
 RUN npm run build
 
 # ---- Stage 2: runtime ----
