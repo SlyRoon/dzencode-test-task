@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-route
 import { AnimatePresence, motion } from 'framer-motion';
 import Layout from './layouts/Layout';
 import OrdersPage from './pages/OrdersPage';
+import ProductsPage from './pages/ProductsPage';
 import StubPage from './pages/StubPage';
 import NotFoundPage from './pages/NotFoundPage';
 
@@ -32,7 +33,8 @@ function AnimatedRoutes() {
           <Route path='orders' element={<PageTransition><OrdersPage /></PageTransition>} />
           {/* ГРУППЫ -> приходы (split-вид: список приходов + продукты выбранного) */}
           <Route path='groups' element={<PageTransition><OrdersPage /></PageTransition>} />
-          <Route path='products' element={<Navigate to='/income' replace />} />
+          {/* ПРОДУКТЫ -> список продуктов */}
+          <Route path='products' element={<PageTransition><ProductsPage /></PageTransition>} />
           <Route path='users' element={<PageTransition><StubPage titleKey='nav.users' /></PageTransition>} />
           <Route path='settings' element={<PageTransition><StubPage titleKey='nav.settings' /></PageTransition>} />
         </Route>

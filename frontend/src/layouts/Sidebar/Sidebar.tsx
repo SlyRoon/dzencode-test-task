@@ -6,6 +6,7 @@ import userAvatar from "../../assets/smile_face.jpeg";
 const NAV_ITEMS = [
   { to: "/income", key: "nav.income" },
   { to: "/groups", key: "nav.groups" },
+  { to: "/products", key: "nav.products" },
   { to: "/users", key: "nav.users" },
   { to: "/settings", key: "nav.settings" },
 ];
