@@ -13,7 +13,11 @@ import DeleteOrderModal from "../features/orders/DeleteOrderModal";
 import AddOrderModal from "../features/orders/AddOrderModal";
 import "./OrdersPage.css";
 
-function OrderPage() {
+interface OrderPageProps {
+  openFirstOrder?: boolean;
+}
+
+function OrderPage({ openFirstOrder = false }: OrderPageProps) {
   const { t } = useTranslation();
   const dispatch = useDispatch<AppDispatch>();
 
@@ -44,6 +48,12 @@ function OrderPage() {
 
     return { ...order, productCount: orderProducts.length, totalUSD, totalUAH };
   });
+
+  useEffect(() => {
+    if (openFirstOrder && selectedOrderId === null && ordersWithStats.length > 0) {
+      setSelectedOrderId(ordersWithStats[0].id);
+    }
+  }, [openFirstOrder, selectedOrderId, ordersWithStats]);
 
   const selectedOrder = selectedOrderId
     ? ordersWithStats.find((o) => o.id === selectedOrderId) ?? null

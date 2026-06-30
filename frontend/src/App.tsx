@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-route
 import { AnimatePresence, motion } from 'framer-motion';
 import Layout from './layouts/Layout';
 import OrdersPage from './pages/OrdersPage';
+import ProductsPage from './pages/ProductsPage';
 import StubPage from './pages/StubPage';
 import NotFoundPage from './pages/NotFoundPage';
 
@@ -31,8 +32,8 @@ function AnimatedRoutes() {
           {/* Alias from the task wording: Orders & Products */}
           <Route path='orders' element={<PageTransition><OrdersPage /></PageTransition>} />
           {/* ГРУППЫ -> приходы (split-вид: список приходов + продукты выбранного) */}
-          <Route path='groups' element={<PageTransition><OrdersPage /></PageTransition>} />
-          <Route path='products' element={<PageTransition><StubPage titleKey='nav.products' /></PageTransition>} />
+          <Route path='groups' element={<PageTransition><OrdersPage openFirstOrder /></PageTransition>} />
+          <Route path='products' element={<PageTransition><ProductsPage /></PageTransition>} />
           <Route path='users' element={<PageTransition><StubPage titleKey='nav.users' /></PageTransition>} />
           <Route path='settings' element={<PageTransition><StubPage titleKey='nav.settings' /></PageTransition>} />
         </Route>
