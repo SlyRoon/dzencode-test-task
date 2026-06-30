@@ -6,7 +6,6 @@ import userAvatar from "../../assets/smile_face.jpeg";
 const NAV_ITEMS = [
   { to: "/income", key: "nav.income" },
   { to: "/groups", key: "nav.groups" },
-  { to: "/products", key: "nav.products" },
   { to: "/users", key: "nav.users" },
   { to: "/settings", key: "nav.settings" },
 ];
@@ -16,10 +15,15 @@ function Sidebar() {
 
   return (
     <div className="left-sidebar">
-      <div className="left-sidebar__avatar-wrap">
+      <NavLink
+        to="/settings"
+        className="left-sidebar__avatar-wrap"
+        aria-label={t("nav.settings")}
+        title={t("nav.settings")}
+      >
         <img src={userAvatar} alt="User" className="left-sidebar__avatar" />
-        <button className="left-sidebar__gear">⚙</button>
-      </div>
+        <span className="left-sidebar__gear" aria-hidden="true">⚙</span>
+      </NavLink>
 
       <nav className="left-sidebar__navigate d-flex gap-3 flex-column">
         {NAV_ITEMS.map(({ to, key }) => (

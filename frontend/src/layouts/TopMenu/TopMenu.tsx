@@ -45,7 +45,7 @@ function TopMenu() {
 
   return (
     <div className="top-menu">
-      <div className="container-fluid px-4">
+      <div className="top-menu__inner">
         <div className="d-flex justify-content-between align-items-center">
           <div className="top-menu__brand d-flex align-items-center">
             <img
