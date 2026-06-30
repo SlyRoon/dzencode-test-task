@@ -1,0 +1,93 @@
+name: Deploy dzencode-test to VPS
+
+on:
+  push:
+    branches:
+      - prod
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Prepare SSH key
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          mkdir -p ~/.ssh
+          echo "${{ secrets.VPS_SSH_KEY_B64 }}" | base64 -d > ~/.ssh/vps_key
+          chmod 600 ~/.ssh/vps_key
+          ssh-keyscan -H "${{ secrets.VPS_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Deploy on VPS via SSH
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          PROJECT_DIR="${{ secrets.VPS_PROJECT_DIR }}"
+          if [ -z "$PROJECT_DIR" ]; then
+            PROJECT_DIR="/var/www/dzencode-test"
+          fi
+
+          ssh -i ~/.ssh/vps_key \
+            -o IdentitiesOnly=yes \
+            -o StrictHostKeyChecking=yes \
+            "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}" \
+            "PROJECT_DIR='$PROJECT_DIR' REPO_SSH_URL='git@github.com:${{ github.repository }}.git' bash -s" <<'EOF'
+              set -euo pipefail
+
+              echo "Prepare project directory"
+              if [ ! -d "$PROJECT_DIR/.git" ]; then
+                mkdir -p "$(dirname "$PROJECT_DIR")"
+                git clone --branch prod "$REPO_SSH_URL" "$PROJECT_DIR"
+              fi
+
+              echo "Go to project directory"
+              cd "$PROJECT_DIR"
+
+              echo "Allow git operations in this directory"
+              git config --global --add safe.directory "$PROJECT_DIR"
+
+              echo "Ensure GitHub SSH remote is configured"
+              if git remote get-url origin >/dev/null 2>&1; then
+                git remote set-url origin "$REPO_SSH_URL"
+              else
+                git remote add origin "$REPO_SSH_URL"
+              fi
+
+              echo "Pull latest code from prod branch"
+              git fetch origin prod
+              git reset --hard origin/prod
+
+              echo "Build and restart Docker Compose services"
+              if docker compose version >/dev/null 2>&1; then
+                docker compose up -d --build --remove-orphans
+                docker compose ps
+              else
+                docker-compose up -d --build --remove-orphans
+                docker-compose ps
+              fi
+
+              echo "Smoke test deployed app"
+              for attempt in 1 2 3 4 5; do
+                if curl -fsS http://127.0.0.1/ >/dev/null && curl -fsS http://127.0.0.1/api/orders >/dev/null; then
+                  echo "Smoke test passed"
+                  break
+                fi
+
+                if [ "$attempt" = "5" ]; then
+                  echo "Smoke test failed"
+                  exit 1
+                fi
+
+                echo "App is not ready yet, retry $attempt/5"
+                sleep 5
+              done
+
+              echo "Prune unused Docker images"
+              docker image prune -f
+
+              echo "Deployment completed successfully"
+          EOF

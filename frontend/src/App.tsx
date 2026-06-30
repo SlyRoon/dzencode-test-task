@@ -27,8 +27,10 @@ function AnimatedRoutes() {
       <Routes location={location} key={location.pathname}>
         <Route path='/' element={<Layout />}>
           <Route index element={<Navigate to='/income' replace />} />
-          {/* ПРИХОД -> список продуктов (Продукты / N) */}
-          <Route path='income' element={<PageTransition><ProductsPage /></PageTransition>} />
+          {/* ПРИХОД -> список приходов */}
+          <Route path='income' element={<PageTransition><OrdersPage /></PageTransition>} />
+          {/* Alias from the task wording: Orders & Products */}
+          <Route path='orders' element={<PageTransition><OrdersPage /></PageTransition>} />
           {/* ГРУППЫ -> приходы (split-вид: список приходов + продукты выбранного) */}
           <Route path='groups' element={<PageTransition><OrdersPage /></PageTransition>} />
           {/* ПРОДУКТЫ -> список продуктов */}

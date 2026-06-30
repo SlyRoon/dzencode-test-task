@@ -97,6 +97,11 @@
   box-shadow: 0 0 0 3px rgba(139, 195, 74, 0.2);
 }
 
+.modal-status-indicator-dark {
+  background-color: #334155;
+  box-shadow: none;
+}
+
 .modal-product-icon {
   margin-right: 15px;
 }
@@ -118,6 +123,11 @@
 
 .modal-product-serial {
   color: #94a3b8;
+  font-size: 0.85rem;
+}
+
+.modal-product-order {
+  color: #64748b;
   font-size: 0.85rem;
 }
 

@@ -41,6 +41,10 @@
     "delete": "DELETE",
     "empty": "This order has no products."
   },
+  "deleteProductModal": {
+    "title": "Are you sure you want to delete this product?",
+    "aria": "Delete product"
+  },
   "form": {
     "addProductTitle": "New product",
     "addOrderTitle": "New order",

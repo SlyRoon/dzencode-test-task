@@ -9,6 +9,7 @@ import { RiDeleteBin6Line } from 'react-icons/ri';
 import { useAppDispatch } from '../../hooks/redux';
 import { fetchDeleteProduct } from '../products/productsSlice';
 import AddProductModal from '../products/AddProductModal';
+import DeleteProductModal from '../products/DeleteProductModal';
 
 interface OrderDetailsProps {
   order: IOrder;
@@ -21,6 +22,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ order, products, onClose })
   const dispatch = useAppDispatch();
   const [mounted, setMounted] = useState(false);
   const [addOpen, setAddOpen] = useState(false);
+  const [productToDelete, setProductToDelete] = useState<IProduct | null>(null);
 
   useEffect(() => {
     const frame = requestAnimationFrame(() => setMounted(true));
@@ -67,8 +69,8 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ order, products, onClose })
                 
                 <button
                   className="delete-product-btn"
-                  onClick={() => dispatch(fetchDeleteProduct(product.id))}
-                  aria-label="delete product"
+                  onClick={() => setProductToDelete(product)}
+                  aria-label={t('deleteProductModal.aria')}
                 >
                   <RiDeleteBin6Line size={20} />
                 </button>
@@ -81,6 +83,18 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ order, products, onClose })
       <AnimatePresence>
         {addOpen && (
           <AddProductModal orderId={order.id} onClose={() => setAddOpen(false)} />
+        )}
+
+        {productToDelete && (
+          <DeleteProductModal
+            product={productToDelete}
+            order={order}
+            onClose={() => setProductToDelete(null)}
+            onConfirm={() => {
+              dispatch(fetchDeleteProduct(productToDelete.id));
+              setProductToDelete(null);
+            }}
+          />
         )}
       </AnimatePresence>
     </div>
