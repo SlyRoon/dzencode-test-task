@@ -108,6 +108,22 @@ jobs:
               $COMPOSE_CMD up -d --build --remove-orphans
               $COMPOSE_CMD ps
 
+              echo "Seed production database"
+              for attempt in 1 2 3 4 5 6 7 8 9 10; do
+                if $COMPOSE_CMD exec -T backend npm run prisma:seed; then
+                  echo "Database seed completed"
+                  break
+                fi
+
+                if [ "$attempt" = "10" ]; then
+                  echo "Database seed failed"
+                  exit 1
+                fi
+
+                echo "Database is not ready yet, seed retry $attempt/10"
+                sleep 5
+              done
+
               echo "Configure host nginx reverse proxy"
               if [ "$(id -u)" -eq 0 ]; then
                 SUDO=""
