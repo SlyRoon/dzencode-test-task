@@ -83,14 +83,30 @@ jobs:
               git fetch origin prod
               git reset --hard origin/prod
 
-              echo "Build and restart Docker Compose services"
+              echo "Select Docker Compose command"
               if docker compose version >/dev/null 2>&1; then
-                docker compose up -d --build --remove-orphans
-                docker compose ps
+                COMPOSE_CMD="docker compose"
               else
-                docker-compose up -d --build --remove-orphans
-                docker-compose ps
+                COMPOSE_CMD="docker-compose"
               fi
+
+              echo "Stop previous project containers"
+              $COMPOSE_CMD down --remove-orphans
+
+              echo "Check host port 80 before starting frontend"
+              if command -v ss >/dev/null 2>&1; then
+                ss -ltnp '( sport = :80 )' || true
+              fi
+
+              PORT_80_CONTAINERS="$(docker ps --format '{{.ID}} {{.Ports}} {{.Names}}' | awk '$0 ~ /0\.0\.0\.0:80->|:::80->/ { print $1 }')"
+              if [ -n "$PORT_80_CONTAINERS" ]; then
+                echo "Remove Docker containers already publishing host port 80"
+                echo "$PORT_80_CONTAINERS" | xargs -r docker rm -f
+              fi
+
+              echo "Build and restart Docker Compose services"
+              $COMPOSE_CMD up -d --build --remove-orphans
+              $COMPOSE_CMD ps
 
               echo "Smoke test deployed app"
               for attempt in 1 2 3 4 5; do
