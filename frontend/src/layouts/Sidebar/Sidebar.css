@@ -1,6 +1,6 @@
 
 .left-sidebar {
-  width: 118px;
+  width: 200px;
   flex-shrink: 0;
   background-color: #ffffff;
   box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
@@ -10,17 +10,17 @@
 
 .left-sidebar__avatar-wrap {
   position: relative;
-  width: 58px;
-  height: 58px;
-  margin: 46px auto 0;
+  width: 96px;
+  height: 96px;
+  margin: 48px auto 0;
   display: block;
   color: inherit;
   text-decoration: none;
 }
 
 .left-sidebar__avatar {
-  width: 58px;
-  height: 58px;
+  width: 96px;
+  height: 96px;
   border-radius: 50%;
   object-fit: cover;
   display: block;
@@ -30,8 +30,8 @@
   position: absolute;
   bottom: 0;
   right: 0;
-  width: 20px;
-  height: 20px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   background-color: #ffffff;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
@@ -40,7 +40,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 11px;
+  font-size: 18px;
   line-height: 1;
 }
 
@@ -48,12 +48,12 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 42px;
-  gap: 18px;
+  margin-top: 54px;
+  gap: 24px;
 }
 
 .left-sidebar__link {
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   color: #333333;
   text-decoration: none;
